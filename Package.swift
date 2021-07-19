@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "RxFirebase",
+    platforms: [
+        .iOS(.v13)
+    ],
     products: [
         .library(
             name: "RxFirebase",
@@ -13,6 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
+            name: "Firebase",
             url: "https://github.com/firebase/firebase-ios-sdk.git",
             from: "8.0.0"
         ),
@@ -24,11 +28,45 @@ let package = Package(
     targets: [
         .target(
             name: "RxFirebase",
-            dependencies: []
+            dependencies: [
+                .product(
+                    name: "FirebaseAuth",
+                    package: "Firebase"
+                ),
+                .product(
+                    name: "FirebaseDatabase",
+                    package: "Firebase"
+                ),
+                .product(
+                    name: "FirebaseFirestore",
+                    package: "Firebase"
+                ),
+                .product(
+                    name: "FirebaseFunctions",
+                    package: "Firebase"
+                ),
+                .product(
+                    name: "FirebaseRemoteConfig",
+                    package: "Firebase"
+                ),
+                .product(
+                    name: "FirebaseStorage",
+                    package: "Firebase"
+                ),
+                .product(
+                    name: "RxSwift",
+                    package: "RxSwift"
+                ),
+                .product(
+                    name: "RxCocoa",
+                    package: "RxSwift"
+                )
+            ]
         ),
         .testTarget(
             name: "RxFirebaseTests",
             dependencies: ["RxFirebase"]
         ),
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
