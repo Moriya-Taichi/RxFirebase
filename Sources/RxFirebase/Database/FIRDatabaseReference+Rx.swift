@@ -9,7 +9,10 @@
 import RxSwift
 import FirebaseDatabase
 
-public typealias DatabaseReferenceTransactionResult = (committed: Bool, snapshot: DataSnapshot?)
+public struct DatabaseReferenceTransactionResult {
+    var commited: Bool
+    var snapshot: DataSnapshot?
+}
 
 extension Reactive where Base: DatabaseReference {
     
@@ -20,18 +23,23 @@ extension Reactive where Base: DatabaseReference {
      * @param value The value to be written.
      * @param priority The priority to be attached to that data.
      */
-    public func setValue(_ value: Any?, andPriority priority: Any? = nil) -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.setValue(value, andPriority: priority, withCompletionBlock: { (error, ref) in
+    public func setValue(
+        _ value: Any?,
+        andPriority priority: Any? = nil
+    ) -> Single<DatabaseReference> {
+        return .create { listner -> Disposable in
+            self.base.setValue(
+                value,
+                andPriority: priority
+            ) { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -44,17 +52,16 @@ extension Reactive where Base: DatabaseReference {
      * remove: is equivalent to calling setValue:nil
      */
     public func removeValue() -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.removeValue(completionBlock: { (error, ref) in
+        return .create { listner -> Disposable in
+            self.base.removeValue { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -81,17 +88,18 @@ extension Reactive where Base: DatabaseReference {
      * @param priority The priority to set at the specified location.
      */
     public func setPriority(_ priority: Any?) -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.setPriority(priority, withCompletionBlock: { (error, ref) in
+        return .create { listner -> Disposable in
+            self.base.setPriority(
+                priority
+            ) { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -100,18 +108,21 @@ extension Reactive where Base: DatabaseReference {
      *
      * @param values A dictionary of the keys to change and their new values
      */
-    public func updateChildValues(_ values: [AnyHashable: Any]) -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.updateChildValues(values, withCompletionBlock: { (error, ref) in
+    public func updateChildValues(
+        _ values: [AnyHashable: Any]
+    ) -> Single<DatabaseReference> {
+        return .create { listner -> Disposable in
+            self.base.updateChildValues(
+                values
+            ) { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -122,18 +133,23 @@ extension Reactive where Base: DatabaseReference {
      * @param value The value to be set after the connection is lost.
      * @param priority The priority to be set after the connection is lost.
      */
-    public func onDisconnectSetValue(_ value: Any?, andPriority priority: Any? = nil) -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.onDisconnectSetValue(value, andPriority: priority, withCompletionBlock: { (error, ref) in
+    public func onDisconnectSetValue(
+        _ value: Any?,
+        andPriority priority: Any? = nil
+    ) -> Single<DatabaseReference> {
+        return .create { listner -> Disposable in
+            self.base.onDisconnectSetValue(
+                value,
+                andPriority: priority
+            ) { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -144,17 +160,16 @@ extension Reactive where Base: DatabaseReference {
      * onDisconnectRemoveValue is especially useful for implementing "presence" systems.
      */
     public func onDisconnectRemoveValue() -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.onDisconnectRemoveValue(completionBlock: { (error, ref) in
+        return .create { listner -> Disposable in
+            self.base.onDisconnectRemoveValue { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -166,17 +181,18 @@ extension Reactive where Base: DatabaseReference {
      * @param values A dictionary of child node keys and the values to set them to after the connection is lost.
      */
     public func onDisconnectUpdateChildValues(_ values: [AnyHashable: Any]) -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.onDisconnectUpdateChildValues(values, withCompletionBlock: { (error, ref) in
+        return .create { listner -> Disposable in
+            self.base.onDisconnectUpdateChildValues(
+                values
+            ) { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -185,17 +201,16 @@ extension Reactive where Base: DatabaseReference {
      * connection is lost, call cancelDisconnectOperations:
      */
     public func cancelDisconnectOperations() -> Single<DatabaseReference> {
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.cancelDisconnectOperations(completionBlock: { (error, ref) in
+        return .create { listner -> Disposable in
+            self.base.cancelDisconnectOperations { error, reference in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(.success(reference))
                 }
-                else {
-                    singleEventListener(.success(ref))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -214,19 +229,29 @@ extension Reactive where Base: DatabaseReference {
      * @param completionBlock This block will be triggered once the transaction is complete, whether it was successful or not. It will indicate if there was an error, whether or not the data was committed, and what the current value of the data at this location is.
      * @param localEvents Set this to NO to suppress events raised for intermediate states, and only get events based on the final state of the transaction.
      */
-    public func runTransactionBlock(_ block: @escaping (MutableData) -> TransactionResult, withLocalEvents: Bool) -> Single<DatabaseReferenceTransactionResult> {
-        
-        return Single.create(subscribe: { (singleEventListener) -> Disposable in
-            self.base.runTransactionBlock(block, andCompletionBlock: { (error, committed, snapshot) in
+    public func runTransactionBlock(
+        _ block: @escaping (MutableData) -> TransactionResult,
+        withLocalEvents: Bool
+    ) -> Single<DatabaseReferenceTransactionResult> {
+        return .create { listner -> Disposable in
+            self.base.runTransactionBlock(
+                block
+            ) { error, commited, snapshot in
                 if let error = error {
-                    singleEventListener(.error(error))
+                    listner(.failure(error))
+                } else {
+                    listner(
+                        .success(
+                            .init(
+                                commited: commited,
+                                snapshot: snapshot
+                            )
+                        )
+                    )
                 }
-                else {
-                    singleEventListener(.success(DatabaseReferenceTransactionResult(committed, snapshot)))
-                }
-            })
+            }
             return Disposables.create()
-        })
+        }
     }
     
     /**
@@ -244,7 +269,12 @@ extension Reactive where Base: DatabaseReference {
      * @param block This block receives the current data at this location and must return an instance of FIRTransactionResult
      * @param completionBlock This block will be triggered once the transaction is complete, whether it was successful or not. It will indicate if there was an error, whether or not the data was committed, and what the current value of the data at this location is.
      */
-    public func runTransactionBlock(_ block: @escaping (MutableData) -> TransactionResult) -> Single<DatabaseReferenceTransactionResult> {
-        return self.runTransactionBlock(block, withLocalEvents: true)
+    public func runTransactionBlock(
+        _ block: @escaping (MutableData) -> TransactionResult
+    ) -> Single<DatabaseReferenceTransactionResult> {
+        return self.runTransactionBlock(
+            block,
+            withLocalEvents: true
+        )
     }
 }
