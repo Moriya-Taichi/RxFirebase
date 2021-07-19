@@ -8,17 +8,27 @@ let package = Package(
     products: [
         .library(
             name: "RxFirebase",
-            targets: ["RxFirebase"]),
+            targets: ["RxFirebase"]
+        ),
     ],
     dependencies: [
-        
+        .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "8.0.0"
+        ),
+        .package(
+            url: "https://github.com/ReactiveX/RxSwift.git",
+            from: "6.0.0"
+        )
     ],
     targets: [
         .target(
             name: "RxFirebase",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "RxFirebaseTests",
-            dependencies: ["RxFirebase"]),
+            dependencies: ["RxFirebase"]
+        ),
     ]
 )
